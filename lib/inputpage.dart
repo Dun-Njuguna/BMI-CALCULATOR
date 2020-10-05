@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'reusable_card.dart';
+import 'icon_content.dart';
+import 'constants.dart';
 
-const bottomContainerHeight = 80.0;
-const bottomContainerColor = Color(0xFFEB1555);
-const Color reusableCardColor = Color(0xFF1D1E33);
+enum Gender { Male, Female }
 
 class InputPage extends StatefulWidget {
   @override
@@ -10,72 +12,243 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Gender selectedGender;
+  int height = kDefaultHeight;
+  int weight = 40;
+  int age = 20;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('BMI CALCULATOR'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('BMI CALCULATOR'),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
                     child: ReusableCard(
-                  colour: reusableCardColor,
-                )),
-                Expanded(
+                      onPress: () {
+                        setState(() {
+                          selectedGender = Gender.Male;
+                        });
+                      },
+                      colour: selectedGender == Gender.Male
+                          ? kActiveCardColor
+                          : kInactiveCardColor,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.mars,
+                        label: 'Male',
+                      ),
+                    ),
+                  ),
+                  Expanded(
                     child: ReusableCard(
-                  colour: reusableCardColor,
-                )),
-              ],
+                      onPress: () {
+                        setState(() {
+                          selectedGender = Gender.Female;
+                        });
+                      },
+                      colour: selectedGender == Gender.Female
+                          ? kActiveCardColor
+                          : kInactiveCardColor,
+                      cardChild: IconContent(
+                        icon: FontAwesomeIcons.venus,
+                        label: 'Female',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: ReusableCard(
-              colour: reusableCardColor,
+            Expanded(
+              child: ReusableCard(
+                colour: kActiveCardColor,
+                cardChild: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Height',
+                      style: kLabelTextStyle,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          height.toString(),
+                          style: kBoldNumberTextStyle,
+                        ),
+                        Text(
+                          'cm',
+                          style: kLabelTextStyle,
+                        )
+                      ],
+                    ),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        inactiveTrackColor: kSliderInActiveColor,
+                        activeTrackColor: Colors.white,
+                        thumbColor: kSliderActiveColor,
+                        overlayColor: kSliderOverlayColor,
+                        thumbShape: RoundSliderThumbShape(
+                          enabledThumbRadius: kEnabledThumbRadius,
+                        ),
+                        overlayShape: RoundSliderOverlayShape(
+                          overlayRadius: kOverlayRadius,
+                        ),
+                      ),
+                      child: Slider(
+                        value: height.toDouble(),
+                        min: kMinHeight,
+                        max: kMaxHeight,
+                        onChanged: (double newValue) {
+                          setState(() {
+                            height = newValue.round();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ReusableCard(
-                    colour: reusableCardColor,
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: ReusableCard(
+                      colour: kActiveCardColor,
+                      cardChild: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Weight',
+                            style: kLabelTextStyle,
+                          ),
+                          Text(
+                            weight.toString(),
+                            style: kBoldNumberTextStyle,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              RoundIconButton(
+                                iconData: FontAwesomeIcons.minus,
+                                onPress: () {
+                                  setState(() {
+                                    weight -= 1;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: kSizedBoxWidth,
+                              ),
+                              RoundIconButton(
+                                iconData: FontAwesomeIcons.plus,
+                                onPress: () {
+                                  setState(() {
+                                    weight += 1;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ReusableCard(
+                      colour: kActiveCardColor,
+                      cardChild: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Age',
+                            style: kLabelTextStyle,
+                          ),
+                          Text(
+                            age.toString(),
+                            style: kBoldNumberTextStyle,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              RoundIconButton(
+                                iconData: FontAwesomeIcons.minus,
+                                onPress: () {
+                                  setState(() {
+                                    age -= 1;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: kSizedBoxWidth,
+                              ),
+                              RoundIconButton(
+                                iconData: FontAwesomeIcons.plus,
+                                onPress: () {
+                                  setState(() {
+                                    age += 1;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/results_page');
+              },
+              child: Container(
+                color: kBottomContainerColor,
+                margin: kContainerMargin,
+                width: double.infinity,
+                height: kBottomContainerHeight,
+                child: Center(
+                  child: Text(
+                    'Calculate',
+                    style: kLargeButtonStyle,
                   ),
                 ),
-                Expanded(
-                  child: ReusableCard(
-                    colour: reusableCardColor,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          Container(
-            color: bottomContainerColor,
-            margin: EdgeInsets.only(top: 10.0),
-            width: double.infinity,
-            height: bottomContainerHeight,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class ReusableCard extends StatelessWidget {
-  ReusableCard({@required this.colour});
-  final Color colour;
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({@required this.iconData, @required this.onPress});
+
+  final IconData iconData;
+  final Function onPress;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: colour,
-        borderRadius: BorderRadius.circular(10.0),
+    return RawMaterialButton(
+      shape: CircleBorder(),
+      fillColor: kRoundIconButtonColor,
+      constraints: BoxConstraints.tightFor(
+        width: 56.0,
+        height: 56.0,
       ),
+      elevation: 5,
+      onPressed: onPress,
+      child: Icon(iconData),
     );
   }
 }
